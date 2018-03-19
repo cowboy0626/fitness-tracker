@@ -1,3 +1,4 @@
+import { UiService } from './../shared/ui.service';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Exercise } from './exercise.model';
 import { Injectable } from '@angular/core';
@@ -41,7 +42,7 @@ export class TrainingService {
   // private exercises: Exercise[] = [];
   // private finishedExercises: Exercise[] = [];
 
-  constructor(private db: AngularFirestore) { }
+  constructor(private db: AngularFirestore, private uiService: UiService) { }
 
   // 임시데이터 조회용 
   getAvailableExercises(){
@@ -49,10 +50,15 @@ export class TrainingService {
   }
   // 실제데이터 조회용 
   fetchAvailableExercises(){
+
+    // 로딩스피너 처리 
+    this.uiService.loadingStateChanged.next(true);
+
     this.fbSubs.push(this.db
       .collection('availableExercises')
       .snapshotChanges()
       .map(docArray => {
+        // throw(new Error());
         return docArray.map(doc => {
           return {
             id: doc.payload.doc.id,
@@ -61,10 +67,17 @@ export class TrainingService {
         });
       })
       .subscribe((exercises: Exercise[]) => {
+        // 로딩스피너 닫기 
+        this.uiService.loadingStateChanged.next(false);
+
         this.availableExercises = exercises;
         this.exercisesChanged.next([...this.availableExercises]);
       }, error => {
         console.log(error);
+        // 로딩스피너 닫기 
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showSnackBar("훈련내용 조회에 에러가 발생하였습니다. 다시 시도해주세요", null, 3000);
+        this.exercisesChanged.next(null); // 아무것도 없는 상태로 계속이동
       }));  
   }
 
@@ -95,6 +108,7 @@ export class TrainingService {
         this.finishedExercisesChanged.next(exercises);
       }, error => {
         console.log(error);
+        this.uiService.showSnackBar(error.message, null, 3000);
       })); 
   }
 
