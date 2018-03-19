@@ -1,0 +1,62 @@
+<section class="signup-form">
+  <form 
+    fxLayout="column" 
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+    #f="ngForm" 
+    (ngSubmit)="onSubmit(f)">
+
+    <mat-form-field>
+      <input 
+        type="email" 
+        matInput 
+        placeholder="이메일을 입력하세요" 
+        ngModel 
+        name="email" 
+        email 
+        required
+        #emailInput="ngModel">
+        <mat-error *ngIf="emailInput.hasError('required')">이메일은 반드시 입력해야 합니다.</mat-error>
+        <mat-error *ngIf="!emailInput.hasError('required')">이메일이 형식에 맞지 않습니다.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field hintLabel="비밀번호는 6글자 이상이어야 합니다">
+      <input 
+        type="password" 
+        matInput 
+        placeholder="비밀번호를 입력하세요" 
+        ngModel 
+        name="password" 
+        required 
+        minlength="6"
+        #pwInput="ngModel">
+      <mat-hint align="end">{{ pwInput.value?.length }} / 6</mat-hint>
+      <mat-error>비밀번호는 6글자 이상이어야 합니다.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input 
+        matInput 
+        placeholder="날짜를 선택하세요" 
+        [matDatepicker]="picker"
+        [max]="maxDate"
+        ngModel 
+        name="birthDate" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- labelPosition="before" 하면 글 뒤에 체크박스표시됨 -->
+    <mat-checkbox ngModel name="agree" required color="primary">이용약관에 동의합니다.</mat-checkbox>
+
+    <button *ngIf="!isLoading" 
+      type="submit" 
+      mat-raised-button 
+      color="primary"
+      [disabled]="f.invalid"
+      >가입</button>
+
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  </form>
+</section>

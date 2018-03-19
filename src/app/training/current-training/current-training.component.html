@@ -1,0 +1,6 @@
+<section class="current-training" fxLayout="column" fxLayoutAlign="center center">
+  <mat-progress-spinner mode="determinate" [value]="progress"></mat-progress-spinner>
+  <h1>{{progress}}%</h1>
+  <p>열심히 하세요. </p>
+  <button mat-raised-button color="accent" (click)="onStop()">중지</button>
+</section>

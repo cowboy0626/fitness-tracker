@@ -1,0 +1,40 @@
+<section class="login-form">
+
+  <form
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()"
+  >
+
+    <mat-form-field>
+      <input 
+        type="email"
+        matInput
+        placeholder="이메일을 입력하세요"
+        formControlName="email">
+        <mat-error>이메일을 입력하세요</mat-error>
+    </mat-form-field>
+
+    <mat-form-field hintLabel="비밀번호는 6글자 이상이어야 합니다">
+      <input 
+        type="password"
+        matInput
+        placeholder="비밀번호를 입력하세요"
+        formControlName="password">
+      <mat-error>비밀번호는 6글자 이상이어야 합니다.</mat-error>
+    </mat-form-field>
+
+    <button *ngIf="!isLoading"
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="loginForm.invalid"
+    >로그인</button>
+
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  </form>
+
+</section>
