@@ -1,4 +1,4 @@
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { TrainingService } from './training.service';
 

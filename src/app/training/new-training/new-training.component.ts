@@ -7,7 +7,7 @@ import { NgForm } from '@angular/forms';
 
 //firestore 
 // import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // 스피너처리
@@ -26,7 +26,7 @@ export class NewTrainingComponent implements OnInit {
 
   exercises$: Observable<Exercise[]>;
 
-  private exerciseSubscription: Subscription;
+  // private exerciseSubscription: Subscription;
 
   constructor(
     private store: Store<fromTraining.State>,

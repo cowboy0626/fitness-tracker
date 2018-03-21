@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+
+// mat-palette()함수, mat-light-theme()함수를 가져다 쓸 수 있는 core
+@include mat-core();
+
+// 컬러정의 
+$moo-app-primary: mat-palette($mat-teal);
+$moo-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$moo-app-warn:    mat-palette($mat-red);
+
+// 테마정의 (with 만들어진 컬러) mat-dark-theme 함수와 mat-light-theme 함수가 있음 
+$moo-app-theme: mat-light-theme($moo-app-primary, $moo-app-accent, $moo-app-warn);
+
+@include angular-material-theme($moo-app-theme);

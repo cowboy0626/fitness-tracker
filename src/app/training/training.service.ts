@@ -3,7 +3,7 @@ import { Exercise } from './exercise.model';
 import { Injectable } from '@angular/core';
 
 // training component쪽으로 startExercise에 따른 이벤트를 전달하기 위함 (eventemitter 대신 Subject 사용함)
-import { Subject } from 'rxjs/Subject';
+// import { Subject } from 'rxjs/Subject';
 
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,15 +21,15 @@ import * as fromTraining from './training.reducer';
 export class TrainingService {
 
   // 훈련상태 변경 이벤트 추적 (임시데이터 처리 경우) 
-  exerciseChanged = new Subject<Exercise>();
+  // exerciseChanged = new Subject<Exercise>();
 
   // 훈련상태 변경 이벤트 추적 (firestore이용하는 경우)
-  exercisesChanged = new Subject<Exercise[]>();
+  // exercisesChanged = new Subject<Exercise[]>();
 
   // 완료된훈련 변경이벤트 추적 
-  finishedExercisesChanged = new Subject<Exercise[]>();
+  // finishedExercisesChanged = new Subject<Exercise[]>();
 
-  private availableExercises: Exercise[] = [];
+  // private availableExercises: Exercise[] = [];
 
   // 현재 사용자가 진행중인 훈련 
   // private runningExercise: Exercise;
@@ -81,7 +81,7 @@ export class TrainingService {
         this.store.dispatch(new UI.StopLoading());
         
         this.uiService.showSnackBar("훈련내용 조회에 에러가 발생하였습니다. 다시 시도해주세요", null, 3000);
-        this.exercisesChanged.next(null); // 아무것도 없는 상태로 계속이동
+        // this.exercisesChanged.next(null); // 아무것도 없는 상태로 계속이동
       }));  
   }
 
