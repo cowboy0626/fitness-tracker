@@ -1,6 +1,6 @@
 
 <!-- 진행 중 훈련이 없을 경우에만 보여주기 -->
-<mat-tab-group *ngIf="!ongoingTraining">
+<mat-tab-group *ngIf="!(ongoingTraining$ | async)">
   <mat-tab label="새 훈련">
     <app-new-training></app-new-training>
   </mat-tab>
@@ -10,4 +10,4 @@
 </mat-tab-group>
 
 <!-- 진행 중 훈련이 있을 경우에만 보여주기 -->
-<app-current-training *ngIf="ongoingTraining"></app-current-training>
+<app-current-training *ngIf="ongoingTraining$ | async"></app-current-training>

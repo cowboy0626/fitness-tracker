@@ -6,10 +6,10 @@
 
   <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>
     <ul fxLayout fxLayoutGap="10px" class="navigation-items">
-      <li *ngIf="!isAuth"><a routerLink="/signup">회원가입</a></li>
-      <li *ngIf="!isAuth"><a routerLink="/login">로그인</a></li>
-      <li *ngIf="isAuth"><a routerLink="/training">훈련</a></li>
-      <li *ngIf="isAuth"><a style="cursor: pointer" (click)="onLogout()">로그아웃</a></li>
+      <li *ngIf="!(isAuth$ | async)"><a routerLink="/signup">회원가입</a></li>
+      <li *ngIf="!(isAuth$ | async)"><a routerLink="/login">로그인</a></li>
+      <li *ngIf="isAuth$ | async"><a routerLink="/training">훈련</a></li>
+      <li *ngIf="isAuth$ | async"><a style="cursor: pointer" (click)="onLogout()">로그아웃</a></li>
     </ul>
   </div>
 </mat-toolbar>

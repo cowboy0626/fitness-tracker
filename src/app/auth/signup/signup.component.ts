@@ -1,28 +1,33 @@
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
 import { AuthService } from './../auth.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UiService } from '../../shared/ui.service';
+
+// 상태값에 따른 액션처리 
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class SignupComponent implements OnInit {
 
   maxDate;
-  isLoading = false;
-  private loadingSubs: Subscription;
+  isLoading$: Observable<boolean>;
 
-
-  constructor(private authService: AuthService, private uiService: UiService) { }
+  constructor(
+    private store: Store<fromRoot.State>,
+    private authService: AuthService, 
+    private uiService: UiService
+  ) { }
 
   ngOnInit() {
-    // 로딩옵저버 준비하기 
-    this.loadingSubs = this.uiService.loadingStateChanged.subscribe(isLoading => {
-      this.isLoading = isLoading;
-    });
+
+    // 정책Store로부터 로딩상태 확인  
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
 
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
@@ -36,10 +41,5 @@ export class SignupComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy(){
-    if(this.loadingSubs){
-      this.loadingSubs.unsubscribe();
-    }
-  }
 
 }

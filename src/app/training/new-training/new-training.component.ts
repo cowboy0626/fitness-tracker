@@ -1,6 +1,7 @@
+import { Store } from '@ngrx/store';
 import { UiService } from './../../shared/ui.service';
 import { TrainingService } from './../training.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { NgForm } from '@angular/forms';
 
@@ -9,64 +10,47 @@ import { NgForm } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+// 스피너처리
+import * as fromRoot from '../../app.reducer';
+import * as fromTraining from '../training.reducer';
+
 @Component({
   selector: 'app-new-training',
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
+export class NewTrainingComponent implements OnInit {
 
   // 로딩스피너 처리 
-  isLoading = true;
+  isLoading$: Observable<boolean>;
 
-  // @Output() trainingStart = new EventEmitter<void>();
+  exercises$: Observable<Exercise[]>;
 
-  // 임시데이터처리 
-  // exercises: Exercise[] = [];
-  exercises: Exercise[];
   private exerciseSubscription: Subscription;
-  private loadingSubs: Subscription;
 
-  constructor(private trainingService: TrainingService, private uiService: UiService) { }
+  constructor(
+    private store: Store<fromTraining.State>,
+    private trainingService: TrainingService, 
+    private uiService: UiService
+  ) { }
 
   ngOnInit() {
-    // 임시데이터 
-    // this.exercises = this.trainingService.getAvailableExercises();
-    // this.exercises = this.db.collection('availableExercises').snapshotChanges()
-    //   .map(docArray => {
-    //     return docArray.map(doc => {
-    //       return { 
-    //         id: doc.payload.doc.id,
-    //         ...doc.payload.doc.data()
-    //       }
-    //     });
-    //   });
-
     // 로딩스피너처리 
-    this.loadingSubs = this.uiService.loadingStateChanged.subscribe(isLoading => {
-      this.isLoading = isLoading;
-    });
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
 
     // 데이터 변동있을 때 마다 다시 업데이트 
-    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => {
-      // this.isLoading = false;
-      this.exercises = exercises;
-    });
+    // this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => {
+    //   // this.isLoading = false;
+    //   this.exercises = exercises;
+    // });
+    this.exercises$ = this.store.select(fromTraining.getAvailableExercises);
+
     this.fetchExercises();
   }
   
   fetchExercises(){
     // 데이터 초기화 (가져오기)) 
     this.trainingService.fetchAvailableExercises();
-  }
-
-  ngOnDestroy(){
-    if(this.exerciseSubscription){
-      this.exerciseSubscription.unsubscribe();
-    }
-    if(this.loadingSubs){
-      this.loadingSubs.unsubscribe();
-    }
   }
 
   // 트레이닝 시작하기 

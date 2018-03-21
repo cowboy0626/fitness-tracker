@@ -1,36 +1,31 @@
-import { Subscription } from 'rxjs/Subscription';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription, Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { TrainingService } from './training.service';
+
+// 정책/로직가져오기 
+import { Store } from '@ngrx/store';
+import * as fromTraining from './training.reducer';
 
 @Component({
   selector: 'app-training',
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.css']
 })
-export class TrainingComponent implements OnInit, OnDestroy {
+export class TrainingComponent implements OnInit{
 
   // 진행중 훈련
-  ongoingTraining = false;
+  ongoingTraining$: Observable<boolean>;
 
   // 변경된 훈련확인용 구독
-  exerciseSubscription: Subscription;
+  // exerciseSubscription: Subscription;
 
-  constructor(private trainingService: TrainingService) { }
+  constructor(
+    private store: Store<fromTraining.State>,
+    private trainingService: TrainingService
+  ) { }
 
   ngOnInit() {
-    this.exerciseSubscription = this.trainingService.exerciseChanged.subscribe(ex => {
-      if(ex){
-        this.ongoingTraining = true;
-      } else { 
-        this.ongoingTraining = false;
-      }
-    });
-  }
-
-  ngOnDestroy(){
-    if(this.exerciseSubscription){
-      this.exerciseSubscription.unsubscribe();
-    }
+    this.ongoingTraining$ = this.store.select(fromTraining.getIsTraining);
   }
 
 }

@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFireModule } from 'angularfire2';
+import { StoreModule } from '@ngrx/store';
 
 
 import { AppComponent } from './app.component';
@@ -18,6 +19,7 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { TrainingService } from './training/training.service';
 import { UiService } from './shared/ui.service';
+import { reducers } from './app.reducer';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { UiService } from './shared/ui.service';
     FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebase), 
     AngularFirestoreModule,
-    AuthModule
+    AuthModule, 
+    StoreModule.forRoot(reducers)
   ],
   providers: [
     AuthService, 

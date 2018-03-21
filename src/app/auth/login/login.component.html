@@ -26,14 +26,14 @@
       <mat-error>비밀번호는 6글자 이상이어야 합니다.</mat-error>
     </mat-form-field>
 
-    <button *ngIf="!isLoading"
+    <button *ngIf="!(isLoading$ | async)"
       type="submit"
       mat-raised-button
       color="primary"
       [disabled]="loginForm.invalid"
     >로그인</button>
 
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
 
   </form>
 

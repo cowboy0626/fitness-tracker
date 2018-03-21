@@ -2,6 +2,11 @@ import { TrainingService } from './../training.service';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { StopTrainingComponent } from './stop-training.component';
+import { take } from 'rxjs/operators';
+
+// 데이터처리부 
+import { Store } from '@ngrx/store';
+import * as fromTraining from '../training.reducer';
 
 @Component({
   selector: 'app-current-training',
@@ -17,7 +22,11 @@ export class CurrentTrainingComponent implements OnInit {
   // @Output() trainingExit = new EventEmitter();
 
 
-  constructor(private dialog: MatDialog, private trainingService: TrainingService) { }
+  constructor(
+    private store: Store<fromTraining.State>,
+    private dialog: MatDialog, 
+    private trainingService: TrainingService
+  ) { }
 
   ngOnInit() {
     this.startOrResumeTimer();
@@ -25,16 +34,20 @@ export class CurrentTrainingComponent implements OnInit {
   
   startOrResumeTimer(){
 
-    // 짧은 실행시간을 가진 훈련은 시간이 빨리 가고 긴 훈련은 시간이 더디게 가게 만듦
-    const step = this.trainingService.getRunningExercise().duration / 100 * 1000;
+    this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex => {
 
-    this.timer = setInterval(() => {
-      this.progress = this.progress + 5;
-      if(this.progress >= 100){
-        this.trainingService.completeExercise();
-        clearInterval(this.timer);
-      }
-    }, step);
+      // 짧은 실행시간을 가진 훈련은 시간이 빨리 가고 긴 훈련은 시간이 더디게 가게 만듦
+      const step = ex.duration / 100 * 1000;
+      this.timer = setInterval(() => {
+        this.progress = this.progress + 5;
+        if(this.progress >= 100){
+          this.trainingService.completeExercise();
+          clearInterval(this.timer);
+        }
+      }, step);
+
+    });
+
 
   }
 
